@@ -1,4 +1,5 @@
 #include "registrationwindow.h"
+#include "loginwindow.h"
 
 #include <QComboBox>
 #include <QFormLayout>
@@ -6,8 +7,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-RegistrationWindow::RegistrationWindow(QWidget *parent)
-    : QMainWindow(parent)
+RegistrationWindow::RegistrationWindow(LoginWindow *loginWindow, QWidget *parent)
+    : QMainWindow(parent), loginWindow(loginWindow)
 {
     // Create main layout
     QWidget *centralWidget = new QWidget(this);
@@ -31,6 +32,13 @@ RegistrationWindow::RegistrationWindow(QWidget *parent)
 
     // Create initial form (Student)
     onUserTypeChanged(userTypeComboBox->currentText());
+
+    // Create switch button
+    switchButton = new QPushButton("Switch to Login", this);
+    mainLayout->addWidget(switchButton);
+
+    // Connect switch button signal to slot
+    connect(switchButton, &QPushButton::clicked, this, &RegistrationWindow::switchToLogin);
 }
 
 RegistrationWindow::~RegistrationWindow()
@@ -118,4 +126,10 @@ void RegistrationWindow::createAdminFields()
 
     // QLineEdit *roleField = new QLineEdit(this);
     // formLayout->addRow("Role:", roleField);
+}
+
+void RegistrationWindow::switchToLogin()
+{
+    this->hide();
+    loginWindow->show();
 }
