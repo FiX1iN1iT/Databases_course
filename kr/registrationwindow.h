@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class QComboBox;
 class QPushButton;
 class WelcomeWindow;
 
@@ -17,6 +18,7 @@ public:
 private slots:
     void backToWelcome();
     void onUserTypeChanged(const QString &userType);
+    void performRegistration();
 
 private:
     void clearForm();
@@ -27,6 +29,9 @@ private:
 
     WelcomeWindow *welcomeWindow;
     QPushButton *backButton;
+    QPushButton *registerButton;
+
+    QComboBox *userTypeComboBox;
 };
 
 #endif // REGISTRATIONWINDOW_H

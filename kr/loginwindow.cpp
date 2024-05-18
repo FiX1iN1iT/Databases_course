@@ -47,6 +47,13 @@ LoginWindow::LoginWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
     // Add form layout to main layout
     mainLayout->addLayout(formLayout);
 
+    // Create login button
+    loginButton = new QPushButton("Login", this);
+    mainLayout->addWidget(loginButton);
+
+    // Connect back button signal to slot
+    connect(loginButton, &QPushButton::clicked, this, &LoginWindow::performLogin);
+
     // Create back button
     backButton = new QPushButton("Back to Welcome", this);
     mainLayout->addWidget(backButton);
@@ -57,6 +64,14 @@ LoginWindow::LoginWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
 
 LoginWindow::~LoginWindow()
 {
+}
+
+void LoginWindow::performLogin()
+{
+    // Placeholder for login functionality
+    qDebug() << "Performing login for user type:" << userTypeComboBox->currentText()
+             << "with login:" << loginLineEdit->text()
+             << "and password:" << passwordLineEdit->text();
 }
 
 void LoginWindow::backToWelcome()

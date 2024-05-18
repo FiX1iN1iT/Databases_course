@@ -18,6 +18,7 @@ public:
 
 private slots:
     void backToWelcome();
+    void performLogin();
 
 private:
     WelcomeWindow *welcomeWindow;

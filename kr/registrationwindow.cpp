@@ -29,7 +29,7 @@ RegistrationWindow::RegistrationWindow(WelcomeWindow *welcomeWindow, QWidget *pa
     mainLayout->addWidget(titleLabel);
 
     // Create user type selection
-    QComboBox *userTypeComboBox = new QComboBox(this);
+    userTypeComboBox = new QComboBox(this);
     userTypeComboBox->addItem("Student");
     userTypeComboBox->addItem("Lecturer");
     userTypeComboBox->addItem("Admin");
@@ -46,6 +46,13 @@ RegistrationWindow::RegistrationWindow(WelcomeWindow *welcomeWindow, QWidget *pa
     // Create initial form (Student)
     onUserTypeChanged(userTypeComboBox->currentText());
 
+    // Create register button
+    registerButton = new QPushButton("Register", this);
+    mainLayout->addWidget(registerButton);
+
+    // Connect register button signal to slot
+    connect(registerButton, &QPushButton::clicked, this, &RegistrationWindow::performRegistration);
+
     // Create back button
     backButton = new QPushButton("Back to Welcome", this);
     mainLayout->addWidget(backButton);
@@ -56,6 +63,12 @@ RegistrationWindow::RegistrationWindow(WelcomeWindow *welcomeWindow, QWidget *pa
 
 RegistrationWindow::~RegistrationWindow()
 {
+}
+
+void RegistrationWindow::performRegistration()
+{
+    // Placeholder for registration functionality
+    qDebug() << "Performing registration for user type:" << userTypeComboBox->currentText();
 }
 
 void RegistrationWindow::onUserTypeChanged(const QString &userType)
