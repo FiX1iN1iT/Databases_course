@@ -4,28 +4,29 @@
 #include <QMainWindow>
 
 class QPushButton;
-class LoginWindow;
+class WelcomeWindow;
 
 class RegistrationWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    RegistrationWindow(LoginWindow *loginWindow, QWidget *parent = nullptr);
+    explicit RegistrationWindow(WelcomeWindow *welcomeWindow, QWidget *parent = nullptr);
     ~RegistrationWindow();
 
 private slots:
-    void switchToLogin();
+    void backToWelcome();
     void onUserTypeChanged(const QString &userType);
 
 private:
-    LoginWindow *loginWindow;
-    QPushButton *switchButton;
+    void clearForm();
     void createCommonFields();
     void createStudentFields();
     void createLecturerFields();
     void createAdminFields();
-    void clearForm();
+
+    WelcomeWindow *welcomeWindow;
+    QPushButton *backButton;
 };
 
 #endif // REGISTRATIONWINDOW_H

@@ -1,16 +1,15 @@
 #include "loginwindow.h"
-#include "registrationwindow.h"
+#include "welcomewindow.h"
 
 #include <QComboBox>
+#include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFormLayout>
-#include <QLabel>
 
-LoginWindow::LoginWindow(QWidget *parent)
-    : QMainWindow(parent),
-    registrationWindow(nullptr)
+LoginWindow::LoginWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
+    : QMainWindow(parent), welcomeWindow(welcomeWindow)
 {
     // Create central widget and main layout
     QWidget *centralWidget = new QWidget(this);
@@ -39,35 +38,29 @@ LoginWindow::LoginWindow(QWidget *parent)
     passwordLineEdit = new QLineEdit(this);
     passwordLineEdit->setEchoMode(QLineEdit::Password);
 
-    // Create switch button
-    switchButton = new QPushButton("Switch to Registration", this);
-
     // Create form layout and add widgets
     QFormLayout *formLayout = new QFormLayout();
     formLayout->addRow("User Type:", userTypeComboBox);
     formLayout->addRow("Login:", loginLineEdit);
     formLayout->addRow("Password:", passwordLineEdit);
 
-    // Add form layout and switch button to main layout
+    // Add form layout to main layout
     mainLayout->addLayout(formLayout);
-    mainLayout->addWidget(switchButton);
 
-    // Connect switch button signal to slot
-    connect(switchButton, &QPushButton::clicked, this, &LoginWindow::switchToRegistration);
+    // Create back button
+    backButton = new QPushButton("Back to Welcome", this);
+    mainLayout->addWidget(backButton);
+
+    // Connect back button signal to slot
+    connect(backButton, &QPushButton::clicked, this, &LoginWindow::backToWelcome);
 }
 
 LoginWindow::~LoginWindow()
 {
-    if (registrationWindow) {
-        delete registrationWindow;
-    }
 }
 
-void LoginWindow::switchToRegistration()
+void LoginWindow::backToWelcome()
 {
-    if (!registrationWindow) {
-        registrationWindow = new RegistrationWindow(this);
-    }
-    registrationWindow->show();
     this->hide();
+    welcomeWindow->show();
 }

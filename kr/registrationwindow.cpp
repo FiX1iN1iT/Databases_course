@@ -1,16 +1,16 @@
 #include "registrationwindow.h"
-#include "loginwindow.h"
+#include "welcomewindow.h"
 
 #include <QComboBox>
 #include <QFormLayout>
+#include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QLabel>
 #include <QDebug>
 
-RegistrationWindow::RegistrationWindow(LoginWindow *loginWindow, QWidget *parent)
-    : QMainWindow(parent), loginWindow(loginWindow)
+RegistrationWindow::RegistrationWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
+    : QMainWindow(parent), welcomeWindow(welcomeWindow)
 {
     // Create main layout
     QWidget *centralWidget = new QWidget(this);
@@ -46,12 +46,12 @@ RegistrationWindow::RegistrationWindow(LoginWindow *loginWindow, QWidget *parent
     // Create initial form (Student)
     onUserTypeChanged(userTypeComboBox->currentText());
 
-    // Create switch button
-    switchButton = new QPushButton("Switch to Login", this);
-    mainLayout->addWidget(switchButton);
+    // Create back button
+    backButton = new QPushButton("Back to Welcome", this);
+    mainLayout->addWidget(backButton);
 
-    // Connect switch button signal to slot
-    connect(switchButton, &QPushButton::clicked, this, &RegistrationWindow::switchToLogin);
+    // Connect back button signal to slot
+    connect(backButton, &QPushButton::clicked, this, &RegistrationWindow::backToWelcome);
 }
 
 RegistrationWindow::~RegistrationWindow()
@@ -101,7 +101,6 @@ void RegistrationWindow::createCommonFields()
     formLayout->addRow("Login:", loginField);
 
     QLineEdit *passwordField = new QLineEdit(this);
-    // passwordField->setEchoMode(QLineEdit::Password);
     formLayout->addRow("Password:", passwordField);
 }
 
@@ -134,18 +133,10 @@ void RegistrationWindow::createLecturerFields()
 void RegistrationWindow::createAdminFields()
 {
     createCommonFields();
-
-    // QFormLayout *formLayout = qobject_cast<QFormLayout *>(centralWidget()->layout()->itemAt(1)->layout());
-
-    // QLineEdit *adminIDField = new QLineEdit(this);
-    // formLayout->addRow("Admin ID:", adminIDField);
-
-    // QLineEdit *roleField = new QLineEdit(this);
-    // formLayout->addRow("Role:", roleField);
 }
 
-void RegistrationWindow::switchToLogin()
+void RegistrationWindow::backToWelcome()
 {
     this->hide();
-    loginWindow->show();
+    welcomeWindow->show();
 }
