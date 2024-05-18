@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFormLayout>
+#include <QLabel>
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -15,6 +16,17 @@ LoginWindow::LoginWindow(QWidget *parent)
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
     setCentralWidget(centralWidget);
+
+    // Create title label
+    QLabel *titleLabel = new QLabel("Login Form", this);
+    titleLabel->setAlignment(Qt::AlignCenter);
+    QFont titleFont = titleLabel->font();
+    titleFont.setPointSize(16);
+    titleFont.setBold(true);
+    titleLabel->setFont(titleFont);
+
+    // Add title label to main layout
+    mainLayout->addWidget(titleLabel);
 
     // Create user type combo box
     userTypeComboBox = new QComboBox(this);

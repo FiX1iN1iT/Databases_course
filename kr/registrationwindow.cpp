@@ -6,6 +6,8 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QLabel>
+#include <QDebug>
 
 RegistrationWindow::RegistrationWindow(LoginWindow *loginWindow, QWidget *parent)
     : QMainWindow(parent), loginWindow(loginWindow)
@@ -14,6 +16,17 @@ RegistrationWindow::RegistrationWindow(LoginWindow *loginWindow, QWidget *parent
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
     setCentralWidget(centralWidget);
+
+    // Create title label
+    QLabel *titleLabel = new QLabel("Registration Form", this);
+    titleLabel->setAlignment(Qt::AlignCenter);
+    QFont titleFont = titleLabel->font();
+    titleFont.setPointSize(16);
+    titleFont.setBold(true);
+    titleLabel->setFont(titleFont);
+
+    // Add title label to main layout
+    mainLayout->addWidget(titleLabel);
 
     // Create user type selection
     QComboBox *userTypeComboBox = new QComboBox(this);
@@ -61,7 +74,10 @@ void RegistrationWindow::onUserTypeChanged(const QString &userType)
 void RegistrationWindow::clearForm()
 {
     // Clear existing form fields
-    QFormLayout *formLayout = qobject_cast<QFormLayout *>(centralWidget()->layout()->itemAt(1)->layout());
+    QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
+    QFormLayout *formLayout = qobject_cast<QFormLayout *>(mainLayout->itemAt(2)->layout());
+    if (!formLayout) return;
+
     while (formLayout->count() > 0) {
         QLayoutItem *item = formLayout->takeAt(0);
         if (item->widget()) {
@@ -73,7 +89,7 @@ void RegistrationWindow::clearForm()
 
 void RegistrationWindow::createCommonFields()
 {
-    QFormLayout *formLayout = qobject_cast<QFormLayout *>(centralWidget()->layout()->itemAt(1)->layout());
+    QFormLayout *formLayout = qobject_cast<QFormLayout *>(centralWidget()->layout()->itemAt(2)->layout());
 
     QLineEdit *usernameField = new QLineEdit(this);
     formLayout->addRow("FIO:", usernameField);
@@ -93,7 +109,7 @@ void RegistrationWindow::createStudentFields()
 {
     createCommonFields();
 
-    QFormLayout *formLayout = qobject_cast<QFormLayout *>(centralWidget()->layout()->itemAt(1)->layout());
+    QFormLayout *formLayout = qobject_cast<QFormLayout *>(centralWidget()->layout()->itemAt(2)->layout());
 
     QLineEdit *chatIDField = new QLineEdit(this);
     formLayout->addRow("Chat ID:", chatIDField);
@@ -106,7 +122,7 @@ void RegistrationWindow::createLecturerFields()
 {
     createCommonFields();
 
-    QFormLayout *formLayout = qobject_cast<QFormLayout *>(centralWidget()->layout()->itemAt(1)->layout());
+    QFormLayout *formLayout = qobject_cast<QFormLayout *>(centralWidget()->layout()->itemAt(2)->layout());
 
     QLineEdit *chatIDField = new QLineEdit(this);
     formLayout->addRow("Chat ID:", chatIDField);
