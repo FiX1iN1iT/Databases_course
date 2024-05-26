@@ -1,5 +1,6 @@
 #include "registrationwindow.h"
 #include "welcomewindow.h"
+#include "menuwindow.h"
 
 #include <QComboBox>
 #include <QFormLayout>
@@ -69,6 +70,12 @@ void RegistrationWindow::performRegistration()
 {
     // Placeholder for registration functionality
     qDebug() << "Performing registration for user type:" << userTypeComboBox->currentText();
+
+    // Show MenuWindow based on user type
+    QString userType = userTypeComboBox->currentText();
+    MenuWindow *menuWindow = new MenuWindow(userType, this);
+    menuWindow->show();
+    this->hide();
 }
 
 void RegistrationWindow::onUserTypeChanged(const QString &userType)

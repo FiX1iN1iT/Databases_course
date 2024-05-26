@@ -9,11 +9,13 @@ CONFIG += c++17
 SOURCES += \
     loginwindow.cpp \
     main.cpp \
+    menuwindow.cpp \
     registrationwindow.cpp \
     welcomewindow.cpp
 
 HEADERS += \
     loginwindow.h \
+    menuwindow.h \
     registrationwindow.h \
     welcomewindow.h
 

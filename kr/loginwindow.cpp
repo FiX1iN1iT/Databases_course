@@ -1,5 +1,6 @@
 #include "loginwindow.h"
 #include "welcomewindow.h"
+#include "menuwindow.h"
 
 #include <QComboBox>
 #include <QLabel>
@@ -72,6 +73,12 @@ void LoginWindow::performLogin()
     qDebug() << "Performing login for user type:" << userTypeComboBox->currentText()
              << "with login:" << loginLineEdit->text()
              << "and password:" << passwordLineEdit->text();
+
+    // Show MenuWindow based on user type
+    QString userType = userTypeComboBox->currentText();
+    MenuWindow *menuWindow = new MenuWindow(userType, this);
+    menuWindow->show();
+    this->hide();
 }
 
 void LoginWindow::backToWelcome()
