@@ -76,7 +76,7 @@ void LoginWindow::performLogin()
 
     // Show MenuWindow based on user type
     QString userType = userTypeComboBox->currentText();
-    MenuWindow *menuWindow = new MenuWindow(userType, this);
+    MenuWindow *menuWindow = new MenuWindow(welcomeWindow, userType, this);
     menuWindow->show();
     this->hide();
 }

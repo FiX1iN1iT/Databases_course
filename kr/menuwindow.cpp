@@ -1,12 +1,13 @@
 #include "menuwindow.h"
+#include "welcomewindow.h"
 
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLabel>
 #include <QDebug>
 
-MenuWindow::MenuWindow(const QString &userType, QWidget *parent)
-    : QMainWindow(parent), userType(userType)
+MenuWindow::MenuWindow(WelcomeWindow *welcomeWindow, const QString &userType, QWidget *parent)
+    : QMainWindow(parent), welcomeWindow(welcomeWindow), userType(userType)
 {
     // Create main layout
     QWidget *centralWidget = new QWidget(this);
@@ -29,10 +30,23 @@ MenuWindow::MenuWindow(const QString &userType, QWidget *parent)
         menuLabel->setText("Admin Menu");
         setupUIForAdmin();
     }
+
+    // Create back button
+    backButton = new QPushButton("Back to Welcome", this);
+    mainLayout->addWidget(backButton);
+
+    // Connect back button signal to slot
+    connect(backButton, &QPushButton::clicked, this, &MenuWindow::backToWelcome);
 }
 
 MenuWindow::~MenuWindow()
 {
+}
+
+void MenuWindow::backToWelcome()
+{
+    this->hide();
+    welcomeWindow->show();
 }
 
 void MenuWindow::setupUIForStudent()
