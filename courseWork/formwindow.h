@@ -29,6 +29,7 @@ public:
     ~FormWindow();
 
 private slots:
+    void onTableRowClicked(int row);
     void loadTableData();
     void didTapAddButton();
     void didTapEditButton();

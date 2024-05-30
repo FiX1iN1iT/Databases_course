@@ -66,6 +66,7 @@ void FormWindow::setupTableWidget() {
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableWidget->setSortingEnabled(true);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    connect(tableWidget, &QTableWidget::cellClicked, this, &FormWindow::onTableRowClicked);
 }
 
 void FormWindow::setupButtons() {
@@ -92,6 +93,18 @@ void FormWindow::setupTextEditResult() {
     textEditResult = new QTextEdit(this);
     textEditResult->setMaximumHeight(50);
     textEditResult->setReadOnly(true);
+}
+
+void FormWindow::onTableRowClicked(int row) {
+    // Check if the row index is valid
+    if (row < 0 || row >= tableWidget->rowCount())
+        return;
+
+    // Populate line edits with data from the selected row
+    for (int col = 0; col < tableWidget->columnCount(); ++col) {
+        QString data = tableWidget->item(row, col)->text();
+        lineEdits.at(col)->setText(data);
+    }
 }
 
 void FormWindow::loadTableData() {
@@ -169,8 +182,15 @@ void FormWindow::didTapDeleteButton() {
 }
 
 void FormWindow::didTapDeselectButton() {
+    // Clear all line edits
+    for (QLineEdit* lineEdit : lineEdits) {
+        lineEdit->clear();
+    }
 
+    // Clear selection from tableWidget
+    tableWidget->clearSelection();
 }
+
 
 void FormWindow::backToMenu() {
     this->hide();
