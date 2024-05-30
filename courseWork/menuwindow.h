@@ -1,11 +1,18 @@
 #ifndef MENUWINDOW_H
 #define MENUWINDOW_H
 
+#include "formwindow.h"
+#include "welcomewindow.h"
+#include "authenticationmanager.h"
+
 #include <QMainWindow>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QPushButton>
+#include <QLabel>
+#include <QDebug>
 
 class WelcomeWindow;
-class FormWindow;
 
 class MenuWindow : public QMainWindow
 {

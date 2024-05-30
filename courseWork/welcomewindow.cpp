@@ -1,11 +1,4 @@
 #include "welcomewindow.h"
-#include "loginwindow.h"
-#include "registrationwindow.h"
-
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QLabel>
-#include <QDebug> // For debugging
 
 WelcomeWindow::WelcomeWindow(QWidget *parent)
     : QMainWindow(parent),

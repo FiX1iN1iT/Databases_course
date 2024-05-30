@@ -1,13 +1,4 @@
 #include "menuwindow.h"
-#include "formwindow.h"
-#include "welcomewindow.h"
-#include "authenticationmanager.h"
-
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QLabel>
-#include <QDebug>
 
 MenuWindow::MenuWindow(WelcomeWindow *welcomeWindow, const QString &userType, QWidget *parent)
     : QMainWindow(parent), welcomeWindow(welcomeWindow), userType(userType)

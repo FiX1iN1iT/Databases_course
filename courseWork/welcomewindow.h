@@ -1,8 +1,13 @@
 #ifndef WELCOMEWINDOW_H
 #define WELCOMEWINDOW_H
 
+#include "loginwindow.h"
+
 #include <QMainWindow>
+#include <QVBoxLayout>
 #include <QPushButton>
+#include <QLabel>
+#include <QDebug>
 
 class LoginWindow;
 
