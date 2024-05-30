@@ -2,9 +2,10 @@
 #define MENUWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
 
 class WelcomeWindow;
-class QPushButton;
+class FormWindow;
 
 class MenuWindow : public QMainWindow
 {
@@ -15,6 +16,7 @@ public:
     ~MenuWindow();
 
 private slots:
+    void openFormWindow();
     void backToWelcome();
 
 private:

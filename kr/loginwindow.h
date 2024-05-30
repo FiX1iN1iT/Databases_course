@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QMessageBox>
+#include <QSqlQuery>
+
 class QComboBox;
 class QLineEdit;
 class QPushButton;
@@ -23,7 +28,7 @@ private slots:
 private:
     WelcomeWindow *welcomeWindow;
     QComboBox *userTypeComboBox;
-    QLineEdit *loginLineEdit;
+    // QLineEdit *loginLineEdit;
     QLineEdit *passwordLineEdit;
     QPushButton *backButton;
     QPushButton *loginButton;

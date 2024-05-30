@@ -1,6 +1,7 @@
 #include "loginwindow.h"
 #include "welcomewindow.h"
 #include "menuwindow.h"
+#include "databasehelper.h"
 
 #include <QComboBox>
 #include <QLabel>
@@ -30,19 +31,19 @@ LoginWindow::LoginWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
 
     // Create user type combo box
     userTypeComboBox = new QComboBox(this);
-    userTypeComboBox->addItem("Student");
-    userTypeComboBox->addItem("Lecturer");
-    userTypeComboBox->addItem("Admin");
+    userTypeComboBox->addItem("student");
+    userTypeComboBox->addItem("lecturer");
+    userTypeComboBox->addItem("admin");
 
     // Create login and password fields
-    loginLineEdit = new QLineEdit(this);
+    // loginLineEdit = new QLineEdit(this);
     passwordLineEdit = new QLineEdit(this);
     passwordLineEdit->setEchoMode(QLineEdit::Password);
 
     // Create form layout and add widgets
     QFormLayout *formLayout = new QFormLayout();
     formLayout->addRow("User Type:", userTypeComboBox);
-    formLayout->addRow("Login:", loginLineEdit);
+    // formLayout->addRow("Login:", loginLineEdit);
     formLayout->addRow("Password:", passwordLineEdit);
 
     // Add form layout to main layout
@@ -67,18 +68,23 @@ LoginWindow::~LoginWindow()
 {
 }
 
-void LoginWindow::performLogin()
-{
-    // Placeholder for login functionality
-    qDebug() << "Performing login for user type:" << userTypeComboBox->currentText()
-             << "with login:" << loginLineEdit->text()
-             << "and password:" << passwordLineEdit->text();
-
+void LoginWindow::performLogin() {
     // Show MenuWindow based on user type
     QString userType = userTypeComboBox->currentText();
-    MenuWindow *menuWindow = new MenuWindow(welcomeWindow, userType, this);
-    menuWindow->show();
-    this->hide();
+    QString password = passwordLineEdit->text();
+
+    // Placeholder for login functionality
+    qDebug() << "Performing login for user type:" << userType
+             // << "with login:" << loginLineEdit->text()
+             << "and password:" << password;
+
+    if (DatabaseHelper::connectToDatabase("localhost", "bmstu", userType, password)) {
+        MenuWindow *menuWindow = new MenuWindow(welcomeWindow, userType, this);
+        menuWindow->show();
+        this->hide();
+    } else {
+        qDebug() << "Error...";
+    }
 }
 
 void LoginWindow::backToWelcome()

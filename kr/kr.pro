@@ -7,6 +7,9 @@ LIBS += -L"/opt/homebrew/opt/libpq/lib"
 CONFIG += c++17
 
 SOURCES += \
+    authenticationmanager.cpp \
+    databasehelper.cpp \
+    formwindow.cpp \
     loginwindow.cpp \
     main.cpp \
     menuwindow.cpp \
@@ -14,6 +17,9 @@ SOURCES += \
     welcomewindow.cpp
 
 HEADERS += \
+    authenticationmanager.h \
+    databasehelper.h \
+    formwindow.h \
     loginwindow.h \
     menuwindow.h \
     registrationwindow.h \

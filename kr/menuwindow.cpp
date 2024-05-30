@@ -1,4 +1,5 @@
 #include "menuwindow.h"
+#include "formwindow.h"
 #include "welcomewindow.h"
 
 #include <QVBoxLayout>
@@ -20,13 +21,13 @@ MenuWindow::MenuWindow(WelcomeWindow *welcomeWindow, const QString &userType, QW
     mainLayout->addWidget(menuLabel);
 
     // Setup UI based on user type
-    if (userType == "Student") {
+    if (userType == "student") {
         menuLabel->setText("Student Menu");
         setupUIForStudent();
-    } else if (userType == "Lecturer") {
+    } else if (userType == "lecturer") {
         menuLabel->setText("Lecturer Menu");
         setupUIForLecturer();
-    } else if (userType == "Admin") {
+    } else if (userType == "admin") {
         menuLabel->setText("Admin Menu");
         setupUIForAdmin();
     }
@@ -43,6 +44,16 @@ MenuWindow::~MenuWindow()
 {
 }
 
+void MenuWindow::openFormWindow()
+{
+    QPushButton *button = qobject_cast<QPushButton *>(sender());
+    if (button) {
+        QString tableName = button->text().toLower();
+        FormWindow *formWindow = new FormWindow(tableName, this);
+        formWindow->show();
+    }
+}
+
 void MenuWindow::backToWelcome()
 {
     this->hide();
@@ -53,34 +64,34 @@ void MenuWindow::setupUIForStudent()
 {
     QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
 
-    // Add student-specific buttons
-    QPushButton *viewGradesButton = new QPushButton("View Grades", this);
-    mainLayout->addWidget(viewGradesButton);
-
-    QPushButton *enrollCoursesButton = new QPushButton("Enroll in Courses", this);
-    mainLayout->addWidget(enrollCoursesButton);
+    QStringList buttons = {"Discipline", "Lecturer", "Materials", "Chat", "Mark"};
+    for (const QString &buttonText : buttons) {
+        QPushButton *button = new QPushButton(buttonText, this);
+        connect(button, &QPushButton::clicked, this, &MenuWindow::openFormWindow);
+        mainLayout->addWidget(button);
+    }
 }
 
 void MenuWindow::setupUIForLecturer()
 {
     QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
 
-    // Add lecturer-specific buttons
-    QPushButton *viewScheduleButton = new QPushButton("View Schedule", this);
-    mainLayout->addWidget(viewScheduleButton);
-
-    QPushButton *manageCoursesButton = new QPushButton("Manage Courses", this);
-    mainLayout->addWidget(manageCoursesButton);
+    QStringList buttons = {"Discipline", "Student", "Materials", "Chat", "Mark"};
+    for (const QString &buttonText : buttons) {
+        QPushButton *button = new QPushButton(buttonText, this);
+        connect(button, &QPushButton::clicked, this, &MenuWindow::openFormWindow);
+        mainLayout->addWidget(button);
+    }
 }
 
 void MenuWindow::setupUIForAdmin()
 {
     QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
 
-    // Add admin-specific buttons
-    QPushButton *manageUsersButton = new QPushButton("Manage Users", this);
-    mainLayout->addWidget(manageUsersButton);
-
-    QPushButton *viewReportsButton = new QPushButton("View Reports", this);
-    mainLayout->addWidget(viewReportsButton);
+    QStringList buttons = {"Discipline", "Lecturer", "Student", "Materials", "Chat", "Mark"};
+    for (const QString &buttonText : buttons) {
+        QPushButton *button = new QPushButton(buttonText, this);
+        connect(button, &QPushButton::clicked, this, &MenuWindow::openFormWindow);
+        mainLayout->addWidget(button);
+    }
 }
