@@ -2,6 +2,7 @@
 #include "welcomewindow.h"
 #include "menuwindow.h"
 #include "databasehelper.h"
+#include "authenticationmanager.h"
 
 #include <QComboBox>
 #include <QLabel>
@@ -79,6 +80,7 @@ void LoginWindow::performLogin() {
              << "and password:" << password;
 
     if (DatabaseHelper::connectToDatabase("localhost", "bmstu", userType, password)) {
+        AuthenticationManager::currentUserLogin = userType;
         MenuWindow *menuWindow = new MenuWindow(welcomeWindow, userType, this);
         menuWindow->show();
         this->hide();

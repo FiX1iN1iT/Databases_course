@@ -7,12 +7,12 @@ QString AuthenticationManager::currentUserLogin;
 QStringList AuthenticationManager::getAllowedButtons() {
     QStringList allowedButtons = {};
 
-    if (currentUserLogin == "booking_department") {
-        allowedButtons = {"Бронирование", "Гости", "Оплата", "Бронь номеров"};
-    } else if (currentUserLogin == "accommodation_service") {
-        allowedButtons = {"Номера"};
-    } else if (currentUserLogin == "sales_department") {
-        allowedButtons = {"Бронирование", "Гости", "Оплата", "Услуги"};
+    if (currentUserLogin == "student") {
+        allowedButtons = {"Course", "Discipline", "Lecturer", "Materials", "Chat", "Mark"};
+    } else if (currentUserLogin == "lecturer") {
+        allowedButtons = {"Course", "Discipline", "Student", "Materials", "Chat", "Mark"};
+    } else if (currentUserLogin == "admin") {
+        allowedButtons = {"Course", "Discipline", "Lecturer", "Student", "Materials", "Chat", "Mark"};
     }
 
     return allowedButtons;

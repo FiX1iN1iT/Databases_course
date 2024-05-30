@@ -9,6 +9,7 @@
 #include <QTableWidget>
 #include <QPushButton>
 #include <QSqlDatabase>
+#include <QTextEdit>
 
 class MenuWindow;
 
@@ -25,20 +26,25 @@ private slots:
     void backToMenu();
 
 private:
-    void setupUI();
+    void setup();
+    void setupLayouts();
+    void setupTableWidget();
+    void setupButtons();
+    void setupTextEditResult();
 
     QString tableName;
 
     QWidget *centralWidget;
     QVBoxLayout *mainLayout;
-    // QHBoxLayout *contentLayout;
+    QHBoxLayout *contentLayout;
     QHBoxLayout *formLayout;
     QVBoxLayout *labelsLayout;
     QVBoxLayout *lineEditsLayout;
-    // QVBoxLayout *menuLayout;
+    QVBoxLayout *menuLayout;
     QTableWidget *tableWidget;
     QPushButton *loadButton;
     QPushButton *backButton;
+    QTextEdit *textEditResult;
 
     QVector<QLabel*> labels;
     QVector<QLineEdit*> lineEdits;

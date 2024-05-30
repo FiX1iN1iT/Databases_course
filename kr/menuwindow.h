@@ -20,9 +20,7 @@ private slots:
     void backToWelcome();
 
 private:
-    void setupUIForStudent();
-    void setupUIForLecturer();
-    void setupUIForAdmin();
+    void setupUI();
 
     WelcomeWindow *welcomeWindow;
     QString userType;

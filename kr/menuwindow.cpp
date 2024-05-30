@@ -1,7 +1,9 @@
 #include "menuwindow.h"
 #include "formwindow.h"
 #include "welcomewindow.h"
+#include "authenticationmanager.h"
 
+#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -20,17 +22,8 @@ MenuWindow::MenuWindow(WelcomeWindow *welcomeWindow, const QString &userType, QW
     menuLabel->setAlignment(Qt::AlignCenter);
     mainLayout->addWidget(menuLabel);
 
-    // Setup UI based on user type
-    if (userType == "student") {
-        menuLabel->setText("Student Menu");
-        setupUIForStudent();
-    } else if (userType == "lecturer") {
-        menuLabel->setText("Lecturer Menu");
-        setupUIForLecturer();
-    } else if (userType == "admin") {
-        menuLabel->setText("Admin Menu");
-        setupUIForAdmin();
-    }
+    menuLabel->setText(userType.left(1).toUpper()+userType.mid(1) + " Menu");
+    setupUI();
 
     // Create back button
     backButton = new QPushButton("Back to Welcome", this);
@@ -60,35 +53,11 @@ void MenuWindow::backToWelcome()
     welcomeWindow->show();
 }
 
-void MenuWindow::setupUIForStudent()
+void MenuWindow::setupUI()
 {
     QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
 
-    QStringList buttons = {"Discipline", "Lecturer", "Materials", "Chat", "Mark"};
-    for (const QString &buttonText : buttons) {
-        QPushButton *button = new QPushButton(buttonText, this);
-        connect(button, &QPushButton::clicked, this, &MenuWindow::openFormWindow);
-        mainLayout->addWidget(button);
-    }
-}
-
-void MenuWindow::setupUIForLecturer()
-{
-    QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
-
-    QStringList buttons = {"Discipline", "Student", "Materials", "Chat", "Mark"};
-    for (const QString &buttonText : buttons) {
-        QPushButton *button = new QPushButton(buttonText, this);
-        connect(button, &QPushButton::clicked, this, &MenuWindow::openFormWindow);
-        mainLayout->addWidget(button);
-    }
-}
-
-void MenuWindow::setupUIForAdmin()
-{
-    QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
-
-    QStringList buttons = {"Discipline", "Lecturer", "Student", "Materials", "Chat", "Mark"};
+    QStringList buttons = AuthenticationManager::getAllowedButtons();
     for (const QString &buttonText : buttons) {
         QPushButton *button = new QPushButton(buttonText, this);
         connect(button, &QPushButton::clicked, this, &MenuWindow::openFormWindow);
