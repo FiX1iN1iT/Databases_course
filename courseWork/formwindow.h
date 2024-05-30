@@ -3,6 +3,7 @@
 
 #include "menuwindow.h"
 #include "databasehelper.h"
+#include "authenticationmanager.h"
 
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -44,6 +45,8 @@ private:
     void setupTitleLabel();
     void setupTableWidget();
     void setupButtons();
+    void setupButtonsForStudent();
+    void setupButtonsForLecturer();
     void setupTextEditResult();
 
     bool isNumeric(const QString &str);

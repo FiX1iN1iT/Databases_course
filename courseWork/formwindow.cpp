@@ -64,7 +64,6 @@ void FormWindow::setupTableWidget() {
     tableWidget->setAutoScroll(true);
     tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    tableWidget->setSortingEnabled(true);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     connect(tableWidget, &QTableWidget::cellClicked, this, &FormWindow::onTableRowClicked);
 }
@@ -87,6 +86,26 @@ void FormWindow::setupButtons() {
 
     backButton = new QPushButton("Back to Menu", this);
     connect(backButton, &QPushButton::clicked, this, &FormWindow::backToMenu);
+
+    if (AuthenticationManager::currentUserLogin == "student") {
+        setupButtonsForStudent();
+    } else if (AuthenticationManager::currentUserLogin == "lecturer") {
+        setupButtonsForLecturer();
+    }
+}
+
+void FormWindow::setupButtonsForStudent() {
+    addButton->hide();
+    editButton->hide();
+    deleteButton->hide();
+}
+
+void FormWindow::setupButtonsForLecturer() {
+    if (tableName != "mark") {
+        addButton->hide();
+        editButton->hide();
+        deleteButton->hide();
+    }
 }
 
 void FormWindow::setupTextEditResult() {
