@@ -30,6 +30,10 @@ public:
 
 private slots:
     void loadTableData();
+    void didTapAddButton();
+    void didTapEditButton();
+    void didTapDeleteButton();
+    void didTapDeselectButton();
     void backToMenu();
 
 private:
@@ -50,11 +54,18 @@ private:
     QVBoxLayout *labelsLayout;
     QVBoxLayout *lineEditsLayout;
     QVBoxLayout *menuLayout;
+
+    QLabel *titleLabel;
     QTableWidget *tableWidget;
     QPushButton *loadButton;
+
+    QPushButton *addButton;
+    QPushButton *editButton;
+    QPushButton *deleteButton;
+    QPushButton *deselectButton;
+
     QPushButton *backButton;
     QTextEdit *textEditResult;
-    QLabel *titleLabel;
 
     QVector<QLabel*> labels;
     QVector<QLineEdit*> lineEdits;

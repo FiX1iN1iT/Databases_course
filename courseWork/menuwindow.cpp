@@ -33,12 +33,9 @@ MenuWindow::MenuWindow(WelcomeWindow *welcomeWindow, const QString &userType, QW
     connect(backButton, &QPushButton::clicked, this, &MenuWindow::backToWelcome);
 }
 
-MenuWindow::~MenuWindow()
-{
-}
+MenuWindow::~MenuWindow() {}
 
-void MenuWindow::openFormWindow()
-{
+void MenuWindow::openFormWindow() {
     QPushButton *button = qobject_cast<QPushButton *>(sender());
     if (button) {
         QString tableName = button->text().toLower();
@@ -47,14 +44,12 @@ void MenuWindow::openFormWindow()
     }
 }
 
-void MenuWindow::backToWelcome()
-{
+void MenuWindow::backToWelcome() {
     this->hide();
     welcomeWindow->show();
 }
 
-void MenuWindow::setupUI()
-{
+void MenuWindow::setupUI() {
     QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
 
     QStringList buttons = AuthenticationManager::getAllowedMenuButtons();

@@ -20,6 +20,10 @@ void FormWindow::setup() {
     formLayout->addLayout(lineEditsLayout);
 
     buttonsLayout->addWidget(loadButton);
+    buttonsLayout->addWidget(addButton);
+    buttonsLayout->addWidget(editButton);
+    buttonsLayout->addWidget(deleteButton);
+    buttonsLayout->addWidget(deselectButton);
     buttonsLayout->addWidget(backButton);
 
     menuLayout->addWidget(titleLabel);
@@ -50,7 +54,7 @@ void FormWindow::setupLayouts() {
 }
 
 void FormWindow::setupTitleLabel() {
-    titleLabel = new QLabel(tableName, this);
+    titleLabel = new QLabel(tableName.toUpper(), this);
     titleLabel->setAlignment(Qt::AlignCenter);
 }
 
@@ -67,6 +71,18 @@ void FormWindow::setupTableWidget() {
 void FormWindow::setupButtons() {
     loadButton = new QPushButton("Load Data", this);
     connect(loadButton, &QPushButton::clicked, this, &FormWindow::loadTableData);
+
+    addButton = new QPushButton("Add", this);
+    connect(addButton, &QPushButton::clicked, this, &FormWindow::didTapAddButton);
+
+    editButton = new QPushButton("Edit", this);
+    connect(editButton, &QPushButton::clicked, this, &FormWindow::didTapEditButton);
+
+    deleteButton = new QPushButton("Delete", this);
+    connect(deleteButton, &QPushButton::clicked, this, &FormWindow::didTapDeleteButton);
+
+    deselectButton = new QPushButton("Deselect", this);
+    connect(deselectButton, &QPushButton::clicked, this, &FormWindow::didTapDeselectButton);
 
     backButton = new QPushButton("Back to Menu", this);
     connect(backButton, &QPushButton::clicked, this, &FormWindow::backToMenu);
@@ -138,6 +154,22 @@ void FormWindow::loadTableData() {
         }
         ++row;
     }
+}
+
+void FormWindow::didTapAddButton() {
+
+}
+
+void FormWindow::didTapEditButton() {
+
+}
+
+void FormWindow::didTapDeleteButton() {
+
+}
+
+void FormWindow::didTapDeselectButton() {
+
 }
 
 void FormWindow::backToMenu() {
