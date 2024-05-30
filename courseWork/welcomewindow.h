@@ -2,10 +2,9 @@
 #define WELCOMEWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
 
-class QPushButton;
 class LoginWindow;
-class RegistrationWindow;
 
 class WelcomeWindow : public QMainWindow
 {
@@ -17,13 +16,10 @@ public:
 
 private slots:
     void openLoginWindow();
-    void openRegistrationWindow();
 
 private:
     QPushButton *loginButton;
-    QPushButton *registrationButton;
     LoginWindow *loginWindow;
-    RegistrationWindow *registrationWindow;
 };
 
 #endif // WELCOMEWINDOW_H

@@ -17,7 +17,6 @@ SOURCES += \
     loginwindow.cpp \
     main.cpp \
     menuwindow.cpp \
-    registrationwindow.cpp \
     welcomewindow.cpp
 
 HEADERS += \
@@ -26,7 +25,6 @@ HEADERS += \
     formwindow.h \
     loginwindow.h \
     menuwindow.h \
-    registrationwindow.h \
     welcomewindow.h
 
 # Default rules for deployment.

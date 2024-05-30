@@ -9,8 +9,7 @@
 
 WelcomeWindow::WelcomeWindow(QWidget *parent)
     : QMainWindow(parent),
-    loginWindow(nullptr),
-    registrationWindow(nullptr)
+    loginWindow(nullptr)
 {
     // Create main layout
     QWidget *centralWidget = new QWidget(this);
@@ -27,36 +26,20 @@ WelcomeWindow::WelcomeWindow(QWidget *parent)
     loginButton = new QPushButton("Login", this);
     mainLayout->addWidget(loginButton);
 
-    // Create registration button
-    registrationButton = new QPushButton("Register", this);
-    mainLayout->addWidget(registrationButton);
-
     // Connect buttons to slots
     connect(loginButton, &QPushButton::clicked, this, &WelcomeWindow::openLoginWindow);
-    connect(registrationButton, &QPushButton::clicked, this, &WelcomeWindow::openRegistrationWindow);
 }
 
-WelcomeWindow::~WelcomeWindow()
-{
-    // Clean up allocated windows
-    if (loginWindow) delete loginWindow;
-    if (registrationWindow) delete registrationWindow;
+WelcomeWindow::~WelcomeWindow() {
+    if (loginWindow) {
+        delete loginWindow;
+    }
 }
 
-void WelcomeWindow::openLoginWindow()
-{
+void WelcomeWindow::openLoginWindow() {
     if (!loginWindow) {
         loginWindow = new LoginWindow(this);
     }
     loginWindow->show();
-    this->hide();
-}
-
-void WelcomeWindow::openRegistrationWindow()
-{
-    if (!registrationWindow) {
-        registrationWindow = new RegistrationWindow(this);
-    }
-    registrationWindow->show();
     this->hide();
 }
