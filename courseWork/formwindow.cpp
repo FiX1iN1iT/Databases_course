@@ -11,6 +11,7 @@ FormWindow::~FormWindow() {}
 
 void FormWindow::setup() {
     setupLayouts();
+    setupTitleLabel();
     setupTableWidget();
     setupButtons();
     setupTextEditResult();
@@ -18,9 +19,12 @@ void FormWindow::setup() {
     formLayout->addLayout(labelsLayout);
     formLayout->addLayout(lineEditsLayout);
 
+    buttonsLayout->addWidget(loadButton);
+    buttonsLayout->addWidget(backButton);
+
+    menuLayout->addWidget(titleLabel);
     menuLayout->addLayout(formLayout);
-    menuLayout->addWidget(loadButton);
-    menuLayout->addWidget(backButton);
+    menuLayout->addLayout(buttonsLayout);
 
     contentLayout->addLayout(menuLayout);
     contentLayout->addWidget(tableWidget);
@@ -37,9 +41,17 @@ void FormWindow::setupLayouts() {
     contentLayout = new QHBoxLayout();
     menuLayout = new QVBoxLayout();
 
+    buttonsLayout = new QVBoxLayout();
+    buttonsLayout->setAlignment(Qt::AlignBottom);
+
     formLayout = new QHBoxLayout();
     labelsLayout = new QVBoxLayout();
     lineEditsLayout = new QVBoxLayout();
+}
+
+void FormWindow::setupTitleLabel() {
+    titleLabel = new QLabel(tableName, this);
+    titleLabel->setAlignment(Qt::AlignCenter);
 }
 
 void FormWindow::setupTableWidget() {

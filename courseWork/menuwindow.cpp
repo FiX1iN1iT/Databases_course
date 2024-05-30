@@ -57,7 +57,7 @@ void MenuWindow::setupUI()
 {
     QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout *>(centralWidget()->layout());
 
-    QStringList buttons = AuthenticationManager::getAllowedButtons();
+    QStringList buttons = AuthenticationManager::getAllowedMenuButtons();
     for (const QString &buttonText : buttons) {
         QPushButton *button = new QPushButton(buttonText, this);
         connect(button, &QPushButton::clicked, this, &MenuWindow::openFormWindow);

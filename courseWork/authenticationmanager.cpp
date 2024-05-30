@@ -4,7 +4,7 @@ AuthenticationManager::AuthenticationManager(QObject *parent) : QObject(parent) 
 
 QString AuthenticationManager::currentUserLogin;
 
-QStringList AuthenticationManager::getAllowedButtons() {
+QStringList AuthenticationManager::getAllowedMenuButtons() {
     QStringList allowedButtons = {};
 
     if (currentUserLogin == "student") {

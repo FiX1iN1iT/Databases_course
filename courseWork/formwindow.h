@@ -35,6 +35,7 @@ private slots:
 private:
     void setup();
     void setupLayouts();
+    void setupTitleLabel();
     void setupTableWidget();
     void setupButtons();
     void setupTextEditResult();
@@ -45,6 +46,7 @@ private:
     QVBoxLayout *mainLayout;
     QHBoxLayout *contentLayout;
     QHBoxLayout *formLayout;
+    QVBoxLayout *buttonsLayout;
     QVBoxLayout *labelsLayout;
     QVBoxLayout *lineEditsLayout;
     QVBoxLayout *menuLayout;
@@ -52,6 +54,7 @@ private:
     QPushButton *loadButton;
     QPushButton *backButton;
     QTextEdit *textEditResult;
+    QLabel *titleLabel;
 
     QVector<QLabel*> labels;
     QVector<QLineEdit*> lineEdits;

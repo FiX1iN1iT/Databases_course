@@ -12,7 +12,7 @@ class AuthenticationManager : public QObject
 public:
     explicit AuthenticationManager(QObject *parent = nullptr);
     static QString currentUserLogin;
-    static QStringList getAllowedButtons();
+    static QStringList getAllowedMenuButtons();
 };
 
 #endif // AUTHENTICATIONMANAGER_H
