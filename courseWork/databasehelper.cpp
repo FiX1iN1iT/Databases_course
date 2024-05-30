@@ -1,9 +1,4 @@
 #include "databasehelper.h"
-#include <QCoreApplication> // Для доступа к методу addLibraryPath
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QDebug> // Для вывода отладочной информации
-#include "authenticationmanager.h"
 
 bool DatabaseHelper::databaseConnected = false; // Инициализация статической переменной класса
 QSqlError DatabaseHelper::lastDbError; // Инициализация статической переменной класса

@@ -1,15 +1,4 @@
 #include "loginwindow.h"
-#include "welcomewindow.h"
-#include "menuwindow.h"
-#include "databasehelper.h"
-#include "authenticationmanager.h"
-
-#include <QComboBox>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QFormLayout>
 
 LoginWindow::LoginWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
     : QMainWindow(parent), welcomeWindow(welcomeWindow)

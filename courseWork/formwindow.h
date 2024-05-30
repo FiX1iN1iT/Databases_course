@@ -1,6 +1,9 @@
 #ifndef FORMWINDOW_H
 #define FORMWINDOW_H
 
+#include "menuwindow.h"
+#include "databasehelper.h"
+
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -8,8 +11,12 @@
 #include <QLineEdit>
 #include <QTableWidget>
 #include <QPushButton>
-#include <QSqlDatabase>
 #include <QTextEdit>
+#include <QMessageBox>
+
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlRecord>
 
 class MenuWindow;
 

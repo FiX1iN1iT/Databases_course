@@ -1,15 +1,8 @@
 #include "formwindow.h"
-#include "menuwindow.h"
-#include "databasehelper.h"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QSqlQuery>
-#include <QSqlRecord>
-#include <QMessageBox>
-#include <QTextEdit>
 
 FormWindow::FormWindow(const QString &tableName, MenuWindow *menuWindow, QWidget *parent)
     : QMainWindow(parent), tableName(tableName), menuWindow(menuWindow) {
+    this->resize(800, 600);
     setup();
     loadTableData();
 }
@@ -51,6 +44,7 @@ void FormWindow::setupLayouts() {
 
 void FormWindow::setupTableWidget() {
     tableWidget = new QTableWidget(this);
+    tableWidget->setMinimumSize(500, 500);
     tableWidget->setAutoScroll(true);
     tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -68,6 +62,7 @@ void FormWindow::setupButtons() {
 
 void FormWindow::setupTextEditResult() {
     textEditResult = new QTextEdit(this);
+    textEditResult->setMaximumHeight(50);
     textEditResult->setReadOnly(true);
 }
 
@@ -133,8 +128,7 @@ void FormWindow::loadTableData() {
     }
 }
 
-void FormWindow::backToMenu()
-{
+void FormWindow::backToMenu() {
     this->hide();
     menuWindow->show();
 }

@@ -1,11 +1,22 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 
+#include "welcomewindow.h"
+#include "menuwindow.h"
+#include "databasehelper.h"
+#include "authenticationmanager.h"
+
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QComboBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QFormLayout>
 
 #include <QSqlDatabase>
 #include <QSqlError>
-#include <QMessageBox>
 #include <QSqlQuery>
 
 class QComboBox;
@@ -28,7 +39,6 @@ private slots:
 private:
     WelcomeWindow *welcomeWindow;
     QComboBox *userTypeComboBox;
-    // QLineEdit *loginLineEdit;
     QLineEdit *passwordLineEdit;
     QPushButton *backButton;
     QPushButton *loginButton;

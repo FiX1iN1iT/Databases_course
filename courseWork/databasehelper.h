@@ -1,9 +1,12 @@
 #ifndef DATABASEHELPER_H
 #define DATABASEHELPER_H
 
+#include <QCoreApplication> // Для доступа к методу addLibraryPath
 #include <QString>
-#include <QSqlError>
+#include <QDebug>
+
 #include <QSqlDatabase>
+#include <QSqlError>
 
 class DatabaseHelper
 {
