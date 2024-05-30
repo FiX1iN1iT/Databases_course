@@ -13,6 +13,7 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QMessageBox>
+#include <QRegularExpression>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -44,6 +45,10 @@ private:
     void setupTableWidget();
     void setupButtons();
     void setupTextEditResult();
+
+    bool isNumeric(const QString &str);
+    QString questionMarks(int count);
+    QString parameters(QStringList values);
 
     QString tableName;
 

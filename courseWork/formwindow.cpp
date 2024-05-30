@@ -170,29 +170,150 @@ void FormWindow::loadTableData() {
 }
 
 void FormWindow::didTapAddButton() {
+    textEditResult->setText("");
 
+    QStringList values;
+    for (QLineEdit* lineEdit : lineEdits) {
+        if (lineEdit->text() == "") {
+            QMessageBox::critical(this, "Empty field", "Fill in all the fields.");
+            return;
+        }
+        values.append(lineEdit->text());
+    }
+
+    QStringList keys;
+    for (QLabel* label : labels) {
+        keys.append(label->text());
+    }
+
+    QString sqlstr = QString("INSERT INTO " + tableName + "(" + parameters(keys) + ")" + " VALUES (" + questionMarks(keys.size()) + ")");
+
+    QSqlQuery query(DatabaseHelper::getDatabaseConnection());
+    query.prepare(sqlstr);
+
+    for (int i = 0; i < values.size(); ++i) {
+        query.bindValue(i, values.at(i));
+    }
+
+    if (query.exec()) {
+        loadTableData();
+        textEditResult->setText("Data added successfully.");
+    } else {
+        QMessageBox::critical(this, "Error", query.lastError().text());
+    }
 }
 
 void FormWindow::didTapEditButton() {
+    textEditResult->setText("");
 
+    // Check if a row is selected
+    QList<QTableWidgetSelectionRange> selectedRanges = tableWidget->selectedRanges();
+    if (selectedRanges.isEmpty()) {
+        QMessageBox::critical(this, "No Selection", "No row selected. Please select a row to edit.");
+        return;
+    }
+
+    int selectedRow = selectedRanges.first().topRow();
+
+    QStringList values;
+    for (QLineEdit* lineEdit : lineEdits) {
+        if (lineEdit->text() == "") {
+            QMessageBox::critical(this, "Empty field", "Fill in all the fields.");
+            return;
+        }
+        values.append(lineEdit->text());
+    }
+
+    QStringList keys;
+    for (QLabel* label : labels) {
+        keys.append(label->text());
+    }
+
+    QStringList setStatements;
+    for (int i = 0; i < keys.size(); ++i) {
+        setStatements.append(keys.at(i) + " = ?");
+    }
+
+    QString primaryKey = keys.at(0); // Assuming the first column is the primary key
+    QString primaryKeyValue = tableWidget->item(selectedRow, 0)->text();
+
+    QString sqlstr = QString("UPDATE " + tableName + " SET " + setStatements.join(", ") + " WHERE " + primaryKey + " = ?");
+
+    QSqlQuery query(DatabaseHelper::getDatabaseConnection());
+    query.prepare(sqlstr);
+
+    for (int i = 0; i < values.size(); ++i) {
+        query.bindValue(i, values.at(i));
+    }
+    query.bindValue(values.size(), primaryKeyValue);
+
+    if (query.exec()) {
+        loadTableData();
+        textEditResult->setText("Data updated successfully.");
+    } else {
+        QMessageBox::critical(this, "Error", query.lastError().text());
+    }
 }
 
 void FormWindow::didTapDeleteButton() {
+    textEditResult->setText("");
 
+    // Check if a row is selected
+    QList<QTableWidgetSelectionRange> selectedRanges = tableWidget->selectedRanges();
+    if (selectedRanges.isEmpty()) {
+        QMessageBox::critical(this, "No Selection", "No row selected. Please select a row to delete.");
+        return;
+    }
+
+    int selectedRow = selectedRanges.first().topRow();
+
+    QString primaryKey = labels.at(0)->text(); // Assuming the first column is the primary key
+    QString primaryKeyValue = tableWidget->item(selectedRow, 0)->text();
+
+    QString sqlstr = QString("DELETE FROM " + tableName + " WHERE " + primaryKey + " = ?");
+
+    QSqlQuery query(DatabaseHelper::getDatabaseConnection());
+    query.prepare(sqlstr);
+    query.bindValue(0, primaryKeyValue);
+
+    if (query.exec()) {
+        loadTableData();
+        textEditResult->setText("Row deleted successfully.");
+    } else {
+        QMessageBox::critical(this, "Error", query.lastError().text());
+    }
 }
 
 void FormWindow::didTapDeselectButton() {
-    // Clear all line edits
     for (QLineEdit* lineEdit : lineEdits) {
         lineEdit->clear();
     }
 
-    // Clear selection from tableWidget
     tableWidget->clearSelection();
 }
-
 
 void FormWindow::backToMenu() {
     this->hide();
     menuWindow->show();
+}
+
+bool FormWindow::isNumeric(const QString &str) {
+    QRegularExpression numeric("^-?\\d*\\.?\\d+$");
+    return numeric.match(str).hasMatch();
+}
+
+QString FormWindow::questionMarks(int count) {
+    QStringList res;
+    for (int i = 0; i < count; ++i) {
+        res.append("?");
+    }
+    return res.join(", ");
+}
+
+QString FormWindow::parameters(QStringList values) {
+    QStringList res;
+    for (int i = 0; i < values.size(); ++i) {
+        res.append(values[i]);
+    }
+    return res.join(", ");
 }
