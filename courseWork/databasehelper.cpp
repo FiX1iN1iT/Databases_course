@@ -24,6 +24,7 @@ bool DatabaseHelper::connectToDatabase(const QString &hostName, const QString &d
         // Если произошла ошибка при подключении, сохраняем информацию об ошибке
         qDebug() << "Connection failed.";
         qDebug() << db.lastError().text();
+        lastDbError = db.lastError();
         databaseConnected = false;
         return false;
     }

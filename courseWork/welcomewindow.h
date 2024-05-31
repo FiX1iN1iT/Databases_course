@@ -21,9 +21,11 @@ public:
 
 private slots:
     void openLoginWindow();
+    void didTapClosePushButton();
 
 private:
     QPushButton *loginButton;
+    QPushButton *closePushButton;
     LoginWindow *loginWindow;
 };
 

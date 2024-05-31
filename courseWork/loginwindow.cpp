@@ -9,7 +9,7 @@ LoginWindow::LoginWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
     setCentralWidget(centralWidget);
 
     // Create title label
-    QLabel *titleLabel = new QLabel("Login Form", this);
+    QLabel *titleLabel = new QLabel("Авторизация", this);
     titleLabel->setAlignment(Qt::AlignCenter);
     QFont titleFont = titleLabel->font();
     titleFont.setPointSize(16);
@@ -32,22 +32,22 @@ LoginWindow::LoginWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
 
     // Create form layout and add widgets
     QFormLayout *formLayout = new QFormLayout();
-    formLayout->addRow("User Type:", userTypeComboBox);
+    formLayout->addRow("Логин:", userTypeComboBox);
     // formLayout->addRow("Login:", loginLineEdit);
-    formLayout->addRow("Password:", passwordLineEdit);
+    formLayout->addRow("Пароль:", passwordLineEdit);
 
     // Add form layout to main layout
     mainLayout->addLayout(formLayout);
 
     // Create login button
-    loginButton = new QPushButton("Login", this);
+    loginButton = new QPushButton("Войти", this);
     mainLayout->addWidget(loginButton);
 
     // Connect back button signal to slot
     connect(loginButton, &QPushButton::clicked, this, &LoginWindow::performLogin);
 
     // Create back button
-    backButton = new QPushButton("Back to Welcome", this);
+    backButton = new QPushButton("Назад", this);
     mainLayout->addWidget(backButton);
 
     // Connect back button signal to slot
@@ -63,18 +63,13 @@ void LoginWindow::performLogin() {
     QString userType = userTypeComboBox->currentText();
     QString password = passwordLineEdit->text();
 
-    // Placeholder for login functionality
-    qDebug() << "Performing login for user type:" << userType
-             // << "with login:" << loginLineEdit->text()
-             << "and password:" << password;
-
     if (DatabaseHelper::connectToDatabase("localhost", "bmstu", userType, password)) {
         AuthenticationManager::currentUserLogin = userType;
         MenuWindow *menuWindow = new MenuWindow(welcomeWindow, userType, this);
         menuWindow->show();
         this->hide();
     } else {
-        qDebug() << "Error...";
+        QMessageBox::critical(this, "Ошибка", DatabaseHelper::lastError().text());
     }
 }
 

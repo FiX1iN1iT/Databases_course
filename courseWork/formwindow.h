@@ -15,6 +15,10 @@
 #include <QTextEdit>
 #include <QMessageBox>
 #include <QRegularExpression>
+#include <QComboBox>
+
+#include <QFile>
+#include <QTextStream>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -37,17 +41,24 @@ private slots:
     void didTapEditButton();
     void didTapDeleteButton();
     void didTapDeselectButton();
+    void didTapSearchPushButton();
+    void didTapMakeReportPushButton();
     void backToMenu();
 
 private:
     void setup();
     void setupLayouts();
     void setupTitleLabel();
+    void setupFormLineEdits();
     void setupTableWidget();
     void setupButtons();
     void setupButtonsForStudent();
     void setupButtonsForLecturer();
     void setupTextEditResult();
+    void setupSearchLineEdit();
+    void populateComboBox();
+
+    void populateComboBox(QComboBox *comboBox, const QString &relatedTableName);
 
     bool isNumeric(const QString &str);
     QString questionMarks(int count);
@@ -63,6 +74,8 @@ private:
     QVBoxLayout *labelsLayout;
     QVBoxLayout *lineEditsLayout;
     QVBoxLayout *menuLayout;
+    QHBoxLayout *searchHLayout;
+    QVBoxLayout *rightVLayout;
 
     QLabel *titleLabel;
     QTableWidget *tableWidget;
@@ -72,12 +85,17 @@ private:
     QPushButton *editButton;
     QPushButton *deleteButton;
     QPushButton *deselectButton;
+    QPushButton *makeReportPushButton;
 
     QPushButton *backButton;
     QTextEdit *textEditResult;
 
+    QLineEdit *searchLineEdit;
+    QPushButton *searchPushButton;
+
     QVector<QLabel*> labels;
     QVector<QLineEdit*> lineEdits;
+    QVector<QComboBox*> comboBoxes;
 
     MenuWindow *menuWindow;
 };

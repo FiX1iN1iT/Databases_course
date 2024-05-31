@@ -15,6 +15,7 @@ void FormWindow::setup() {
     setupTableWidget();
     setupButtons();
     setupTextEditResult();
+    setupSearchLineEdit();
 
     formLayout->addLayout(labelsLayout);
     formLayout->addLayout(lineEditsLayout);
@@ -24,14 +25,21 @@ void FormWindow::setup() {
     buttonsLayout->addWidget(editButton);
     buttonsLayout->addWidget(deleteButton);
     buttonsLayout->addWidget(deselectButton);
+    buttonsLayout->addWidget(makeReportPushButton);
     buttonsLayout->addWidget(backButton);
 
     menuLayout->addWidget(titleLabel);
     menuLayout->addLayout(formLayout);
     menuLayout->addLayout(buttonsLayout);
 
+    searchHLayout->addWidget(searchLineEdit);
+    searchHLayout->addWidget(searchPushButton);
+
+    rightVLayout->addLayout(searchHLayout);
+    rightVLayout->addWidget(tableWidget);
+
     contentLayout->addLayout(menuLayout);
-    contentLayout->addWidget(tableWidget);
+    contentLayout->addLayout(rightVLayout);
 
     mainLayout->addLayout(contentLayout);
     mainLayout->addWidget(textEditResult);
@@ -51,11 +59,21 @@ void FormWindow::setupLayouts() {
     formLayout = new QHBoxLayout();
     labelsLayout = new QVBoxLayout();
     lineEditsLayout = new QVBoxLayout();
+
+    searchHLayout = new QHBoxLayout();
+    rightVLayout = new QVBoxLayout();
 }
 
 void FormWindow::setupTitleLabel() {
     titleLabel = new QLabel(tableName.toUpper(), this);
     titleLabel->setAlignment(Qt::AlignCenter);
+}
+
+void FormWindow::setupFormLineEdits() {
+    lineEdits.at(0)->setReadOnly(true);
+    lineEdits.at(0)->setPlaceholderText("Автоматически");
+
+    searchLineEdit->setPlaceholderText("Поиск по полю " + labels.at(1)->text());
 }
 
 void FormWindow::setupTableWidget() {
@@ -69,23 +87,29 @@ void FormWindow::setupTableWidget() {
 }
 
 void FormWindow::setupButtons() {
-    loadButton = new QPushButton("Load Data", this);
+    loadButton = new QPushButton("Загрузить данные", this);
     connect(loadButton, &QPushButton::clicked, this, &FormWindow::loadTableData);
 
-    addButton = new QPushButton("Add", this);
+    addButton = new QPushButton("Добавить", this);
     connect(addButton, &QPushButton::clicked, this, &FormWindow::didTapAddButton);
 
-    editButton = new QPushButton("Edit", this);
+    editButton = new QPushButton("Изменить", this);
     connect(editButton, &QPushButton::clicked, this, &FormWindow::didTapEditButton);
 
-    deleteButton = new QPushButton("Delete", this);
+    deleteButton = new QPushButton("Удалить", this);
     connect(deleteButton, &QPushButton::clicked, this, &FormWindow::didTapDeleteButton);
 
-    deselectButton = new QPushButton("Deselect", this);
+    deselectButton = new QPushButton("Снять выбор", this);
     connect(deselectButton, &QPushButton::clicked, this, &FormWindow::didTapDeselectButton);
 
-    backButton = new QPushButton("Back to Menu", this);
+    searchPushButton = new QPushButton("Поиск", this);
+    connect(searchPushButton, &QPushButton::clicked, this, &FormWindow::didTapSearchPushButton);
+
+    backButton = new QPushButton("Назад", this);
     connect(backButton, &QPushButton::clicked, this, &FormWindow::backToMenu);
+
+    makeReportPushButton = new QPushButton("Отчет", this);
+    connect(makeReportPushButton, &QPushButton::clicked, this, &FormWindow::didTapMakeReportPushButton);
 
     if (AuthenticationManager::currentUserLogin == "student") {
         setupButtonsForStudent();
@@ -114,6 +138,10 @@ void FormWindow::setupTextEditResult() {
     textEditResult->setReadOnly(true);
 }
 
+void FormWindow::setupSearchLineEdit() {
+    searchLineEdit = new QLineEdit(this);
+}
+
 void FormWindow::onTableRowClicked(int row) {
     // Check if the row index is valid
     if (row < 0 || row >= tableWidget->rowCount())
@@ -126,12 +154,39 @@ void FormWindow::onTableRowClicked(int row) {
     }
 }
 
+void FormWindow::populateComboBox(QComboBox *comboBox, const QString &relatedTableName) {
+    QSqlQuery query1(DatabaseHelper::getDatabaseConnection());
+    query1.prepare(QString("SELECT id_" + relatedTableName + ", title FROM " + relatedTableName));
+
+    QSqlQuery query2(DatabaseHelper::getDatabaseConnection());
+    query2.prepare(QString("SELECT id_" + relatedTableName + ", fio FROM " + relatedTableName));
+
+    if (query1.exec()) {
+        while (query1.next()) {
+            QString id = query1.value(0).toString();
+            QString title = query1.value(1).toString();
+            comboBox->addItem(title, id);
+        }
+    } else if (query2.exec()) {
+        while (query2.next()) {
+            QString id = query2.value(0).toString();
+            QString fio = query2.value(1).toString();
+            comboBox->addItem(fio, id);
+        }
+    } else {
+        QMessageBox::critical(this, "Error", query1.lastError().text());
+    }
+}
+
+
 void FormWindow::loadTableData() {
     // Clear previous labels and lineEdits
     qDeleteAll(labels);
     labels.clear();
     qDeleteAll(lineEdits);
     lineEdits.clear();
+    qDeleteAll(comboBoxes);
+    comboBoxes.clear();
 
     // Clear tableWidget
     tableWidget->clear();
@@ -139,7 +194,7 @@ void FormWindow::loadTableData() {
     tableWidget->setColumnCount(0);
 
     if (!DatabaseHelper::isDatabaseConnected()) {
-        QMessageBox::critical(this, "Error", "Database not connected");
+        QMessageBox::critical(this, "Ошибка", "База данных не подключена");
         return;
     }
 
@@ -149,7 +204,7 @@ void FormWindow::loadTableData() {
     query.prepare(sqlstr);
 
     if (!query.exec()) {
-        QMessageBox::critical(this, "Error", query.lastError().text());
+        QMessageBox::critical(this, "Ошибка", query.lastError().text());
         return;
     }
 
@@ -159,14 +214,33 @@ void FormWindow::loadTableData() {
     // Set up labels and lineEdits
     for (int i = 0; i < columnCount; ++i) {
         QLabel *label = new QLabel(record.fieldName(i), this);
-        QLineEdit *lineEdit = new QLineEdit(this);
-
         labels.append(label);
-        lineEdits.append(lineEdit);
-
         labelsLayout->addWidget(label);
+
+        QLineEdit *lineEdit = new QLineEdit(this);
+        lineEdits.append(lineEdit);
         lineEditsLayout->addWidget(lineEdit);
+
+        if (record.fieldName(i).startsWith("id", Qt::CaseInsensitive) && i != 0) {
+            QComboBox *comboBox = new QComboBox(this);
+
+            QString foreign = record.fieldName(i).split("_")[1];
+            populateComboBox(comboBox, foreign);
+
+            comboBoxes.append(comboBox);
+
+            lineEdits.at(i)->setText("1");
+            lineEdits.at(i)->hide();
+            connect(comboBox, &QComboBox::currentIndexChanged, this, [this, i](const int &index) {
+                qDebug() << "new text: " << index + 1 << ", at: " << i;
+                lineEdits.at(i)->setText(QString::number(index + 1));
+            });
+
+            lineEditsLayout->addWidget(comboBox);
+        }
     }
+
+    setupFormLineEdits();
 
     // Set up table headers
     tableWidget->setColumnCount(columnCount);
@@ -192,9 +266,14 @@ void FormWindow::didTapAddButton() {
     textEditResult->setText("");
 
     QStringList values;
-    for (QLineEdit* lineEdit : lineEdits) {
-        if (lineEdit->text() == "") {
-            QMessageBox::critical(this, "Empty field", "Fill in all the fields.");
+    for (int i = 0; i < lineEdits.size(); ++i) {
+        QLineEdit* lineEdit = lineEdits.at(i);
+        if (lineEdit->text() != "" && i == 0) {
+            QMessageBox::critical(this, "ID", "Сбросьте выбор записи.");
+            return;
+        }
+        if (lineEdit->text() == "" && i != 0) {
+            QMessageBox::critical(this, "Пустое поле", "Заполните все поля.");
             return;
         }
         values.append(lineEdit->text());
@@ -210,15 +289,16 @@ void FormWindow::didTapAddButton() {
     QSqlQuery query(DatabaseHelper::getDatabaseConnection());
     query.prepare(sqlstr);
 
-    for (int i = 0; i < values.size(); ++i) {
+    query.bindValue(0, tableWidget->rowCount() + 1);
+    for (int i = 1; i < values.size(); ++i) {
         query.bindValue(i, values.at(i));
     }
 
     if (query.exec()) {
         loadTableData();
-        textEditResult->setText("Data added successfully.");
+        textEditResult->setText("Запись успешно добавлена.");
     } else {
-        QMessageBox::critical(this, "Error", query.lastError().text());
+        QMessageBox::critical(this, "Ошибка", query.lastError().text());
     }
 }
 
@@ -228,7 +308,7 @@ void FormWindow::didTapEditButton() {
     // Check if a row is selected
     QList<QTableWidgetSelectionRange> selectedRanges = tableWidget->selectedRanges();
     if (selectedRanges.isEmpty()) {
-        QMessageBox::critical(this, "No Selection", "No row selected. Please select a row to edit.");
+        QMessageBox::critical(this, "Нет выбора", "Выберите ячейку, чтобы изменить запись.");
         return;
     }
 
@@ -237,7 +317,7 @@ void FormWindow::didTapEditButton() {
     QStringList values;
     for (QLineEdit* lineEdit : lineEdits) {
         if (lineEdit->text() == "") {
-            QMessageBox::critical(this, "Empty field", "Fill in all the fields.");
+            QMessageBox::critical(this, "Пустое поле", "Заполните все поля.");
             return;
         }
         values.append(lineEdit->text());
@@ -268,7 +348,7 @@ void FormWindow::didTapEditButton() {
 
     if (query.exec()) {
         loadTableData();
-        textEditResult->setText("Data updated successfully.");
+        textEditResult->setText("Запись успешно обновлена.");
     } else {
         QMessageBox::critical(this, "Error", query.lastError().text());
     }
@@ -280,7 +360,7 @@ void FormWindow::didTapDeleteButton() {
     // Check if a row is selected
     QList<QTableWidgetSelectionRange> selectedRanges = tableWidget->selectedRanges();
     if (selectedRanges.isEmpty()) {
-        QMessageBox::critical(this, "No Selection", "No row selected. Please select a row to delete.");
+        QMessageBox::critical(this, "Нет выбора", "Выберите ячейку, чтобы изменить запись.");
         return;
     }
 
@@ -297,7 +377,7 @@ void FormWindow::didTapDeleteButton() {
 
     if (query.exec()) {
         loadTableData();
-        textEditResult->setText("Row deleted successfully.");
+        textEditResult->setText("Запись успешно удалена.");
     } else {
         QMessageBox::critical(this, "Error", query.lastError().text());
     }
@@ -314,6 +394,53 @@ void FormWindow::didTapDeselectButton() {
 void FormWindow::backToMenu() {
     this->hide();
     menuWindow->show();
+}
+
+void FormWindow::didTapSearchPushButton() {
+    QString title = searchLineEdit->text();
+    // Clear any previous selection
+    tableWidget->clearSelection();
+
+    // Loop through the rows of the tableWidget
+    for (int row = 0; row < tableWidget->rowCount(); ++row) {
+        // Assuming the title is stored in the first column (index 0)
+        QTableWidgetItem *item = tableWidget->item(row, 1);
+        // if (item && item->text().contains(title, Qt::CaseInsensitive)) {
+        if (item && item->text() == title) {
+            // Select the matching row
+            tableWidget->selectRow(row);
+            // Optionally, scroll to the selected row
+            tableWidget->scrollToItem(item);
+            return;
+        }
+    }
+
+    // If no match is found, you can optionally show a message
+    QMessageBox::information(this, "Ошибка", "Нет похожих записей.");
+}
+
+void FormWindow::didTapMakeReportPushButton() {
+    QString reportText = "Отчет о " + tableName + ":\n\n";
+
+    for (int row = 0; row < tableWidget->rowCount(); ++row) {
+        for (int col = 0; col < tableWidget->columnCount(); ++col) {
+            reportText += labels.at(col)->text() + ": ";
+            reportText += tableWidget->item(row, col)->text();
+            reportText += "\n";
+        }
+        reportText += "\n";
+    }
+
+    QString fileName = "/Users/a123/Downloads/report.txt";
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << reportText;
+        file.close();
+        QMessageBox::information(this, "Успех", "Отчет успешно сохранен в файле " + fileName);
+    } else {
+        QMessageBox::critical(this, "Ошибка", "Не удалось создать файл для сохранения отчета.");
+    }
 }
 
 bool FormWindow::isNumeric(const QString &str) {

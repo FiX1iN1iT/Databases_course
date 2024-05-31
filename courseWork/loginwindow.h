@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QFormLayout>
+#include <QMessageBox>
 
 #include <QSqlDatabase>
 #include <QSqlError>

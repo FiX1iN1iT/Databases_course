@@ -13,11 +13,17 @@ MenuWindow::MenuWindow(WelcomeWindow *welcomeWindow, const QString &userType, QW
     menuLabel->setAlignment(Qt::AlignCenter);
     mainLayout->addWidget(menuLabel);
 
-    menuLabel->setText(userType.left(1).toUpper()+userType.mid(1) + " Menu");
+    if (userType == "student") {
+        menuLabel->setText("Студент");
+    } else if (userType == "lecturer") {
+        menuLabel->setText("Преподаватель");
+    } else if (userType == "admin") {
+        menuLabel->setText("Администратор");
+    }
     setupUI();
 
     // Create back button
-    backButton = new QPushButton("Back to Welcome", this);
+    backButton = new QPushButton("Назад", this);
     mainLayout->addWidget(backButton);
 
     // Connect back button signal to slot
