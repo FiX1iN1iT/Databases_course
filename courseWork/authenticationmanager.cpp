@@ -8,11 +8,11 @@ QStringList AuthenticationManager::getAllowedMenuButtons() {
     QStringList allowedButtons = {};
 
     if (currentUserLogin == "student") {
-        allowedButtons = {"Course", "Discipline", "Lecturer", "Materials", "Chat", "Mark"};
+        allowedButtons = {"Курс", "Дисциплина", "Преподаватель", "Материалы", "Чат", "Оценка"};
     } else if (currentUserLogin == "lecturer") {
-        allowedButtons = {"Course", "Discipline", "Student", "Materials", "Chat", "Mark"};
+        allowedButtons = {"Курс", "Дисциплина", "Студент", "Материалы", "Чат", "Оценка"};
     } else if (currentUserLogin == "admin") {
-        allowedButtons = {"Course", "Discipline", "Lecturer", "Student", "Materials", "Chat", "Mark"};
+        allowedButtons = {"Курс", "Дисциплина", "Преподаватель", "Студент", "Материалы", "Чат", "Оценка"};
     }
 
     return allowedButtons;

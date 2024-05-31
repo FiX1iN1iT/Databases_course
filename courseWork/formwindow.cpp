@@ -125,7 +125,7 @@ void FormWindow::setupButtonsForStudent() {
 }
 
 void FormWindow::setupButtonsForLecturer() {
-    if (tableName != "mark") {
+    if (tableName != "оценка") {
         addButton->hide();
         editButton->hide();
         deleteButton->hide();
@@ -156,10 +156,10 @@ void FormWindow::onTableRowClicked(int row) {
 
 void FormWindow::populateComboBox(QComboBox *comboBox, const QString &relatedTableName) {
     QSqlQuery query1(DatabaseHelper::getDatabaseConnection());
-    query1.prepare(QString("SELECT id_" + relatedTableName + ", title FROM " + relatedTableName));
+    query1.prepare(QString("SELECT ID, название FROM " + relatedTableName));
 
     QSqlQuery query2(DatabaseHelper::getDatabaseConnection());
-    query2.prepare(QString("SELECT id_" + relatedTableName + ", fio FROM " + relatedTableName));
+    query2.prepare(QString("SELECT ID, ФИО FROM " + relatedTableName));
 
     if (query1.exec()) {
         while (query1.next()) {
@@ -174,7 +174,7 @@ void FormWindow::populateComboBox(QComboBox *comboBox, const QString &relatedTab
             comboBox->addItem(fio, id);
         }
     } else {
-        QMessageBox::critical(this, "Error", query1.lastError().text());
+        QMessageBox::critical(this, "Ошибка", query1.lastError().text());
     }
 }
 
@@ -221,19 +221,25 @@ void FormWindow::loadTableData() {
         lineEdits.append(lineEdit);
         lineEditsLayout->addWidget(lineEdit);
 
-        if (record.fieldName(i).startsWith("id", Qt::CaseInsensitive) && i != 0) {
+        if (record.fieldName(i).startsWith("ID", Qt::CaseInsensitive) && i != 0) {
             QComboBox *comboBox = new QComboBox(this);
 
             QString foreign = record.fieldName(i).split("_")[1];
             populateComboBox(comboBox, foreign);
-
             comboBoxes.append(comboBox);
 
-            lineEdits.at(i)->setText("1");
-            lineEdits.at(i)->hide();
+            lineEdit->hide();
             connect(comboBox, &QComboBox::currentIndexChanged, this, [this, i](const int &index) {
-                qDebug() << "new text: " << index + 1 << ", at: " << i;
                 lineEdits.at(i)->setText(QString::number(index + 1));
+            });
+
+            int comboBoxIndex = comboBoxes.size() - 1;
+
+            connect(lineEdit, &QLineEdit::textChanged, this, [this, comboBoxIndex](const QString &text) {
+                int index = comboBoxes.at(comboBoxIndex)->findData(text);
+                if (index != -1) {
+                    comboBoxes.at(comboBoxIndex)->setCurrentIndex(index);
+                }
             });
 
             lineEditsLayout->addWidget(comboBox);
@@ -276,11 +282,14 @@ void FormWindow::didTapAddButton() {
             QMessageBox::critical(this, "Пустое поле", "Заполните все поля.");
             return;
         }
-        values.append(lineEdit->text());
+        if (i != 0) {
+            values.append(lineEdit->text());
+        }
     }
 
     QStringList keys;
-    for (QLabel* label : labels) {
+    for (int i = 1; i < labels.size(); ++i) {
+        QLabel* label = labels.at(i);
         keys.append(label->text());
     }
 
@@ -289,8 +298,7 @@ void FormWindow::didTapAddButton() {
     QSqlQuery query(DatabaseHelper::getDatabaseConnection());
     query.prepare(sqlstr);
 
-    query.bindValue(0, tableWidget->rowCount() + 1);
-    for (int i = 1; i < values.size(); ++i) {
+    for (int i = 0; i < values.size(); ++i) {
         query.bindValue(i, values.at(i));
     }
 
@@ -350,7 +358,7 @@ void FormWindow::didTapEditButton() {
         loadTableData();
         textEditResult->setText("Запись успешно обновлена.");
     } else {
-        QMessageBox::critical(this, "Error", query.lastError().text());
+        QMessageBox::critical(this, "Ошибка", query.lastError().text());
     }
 }
 
@@ -379,7 +387,7 @@ void FormWindow::didTapDeleteButton() {
         loadTableData();
         textEditResult->setText("Запись успешно удалена.");
     } else {
-        QMessageBox::critical(this, "Error", query.lastError().text());
+        QMessageBox::critical(this, "Ошибка", query.lastError().text());
     }
 }
 

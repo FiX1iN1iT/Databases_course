@@ -54,16 +54,14 @@ LoginWindow::LoginWindow(WelcomeWindow *welcomeWindow, QWidget *parent)
     connect(backButton, &QPushButton::clicked, this, &LoginWindow::backToWelcome);
 }
 
-LoginWindow::~LoginWindow()
-{
-}
+LoginWindow::~LoginWindow() {}
 
 void LoginWindow::performLogin() {
     // Show MenuWindow based on user type
     QString userType = userTypeComboBox->currentText();
     QString password = passwordLineEdit->text();
 
-    if (DatabaseHelper::connectToDatabase("localhost", "bmstu", userType, password)) {
+    if (DatabaseHelper::connectToDatabase("localhost", "course", userType, password)) {
         AuthenticationManager::currentUserLogin = userType;
         MenuWindow *menuWindow = new MenuWindow(welcomeWindow, userType, this);
         menuWindow->show();

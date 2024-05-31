@@ -17,12 +17,12 @@ bool DatabaseHelper::connectToDatabase(const QString &hostName, const QString &d
 
     if (db.open()) {
         // Если подключение успешно, устанавливаем флаг успешного подключения
-        qDebug() << "Connection successful.";
+        qDebug() << "Соединение успешно.";
         databaseConnected = true;
         return true;
     } else {
         // Если произошла ошибка при подключении, сохраняем информацию об ошибке
-        qDebug() << "Connection failed.";
+        qDebug() << "Ошибка соединения.";
         qDebug() << db.lastError().text();
         lastDbError = db.lastError();
         databaseConnected = false;
