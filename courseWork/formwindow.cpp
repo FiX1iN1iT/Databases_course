@@ -228,6 +228,7 @@ void FormWindow::loadTableData() {
             populateComboBox(comboBox, foreign);
             comboBoxes.append(comboBox);
 
+            lineEdit->setText("1");
             lineEdit->hide();
             connect(comboBox, &QComboBox::currentIndexChanged, this, [this, i](const int &index) {
                 lineEdits.at(i)->setText(QString::number(index + 1));
